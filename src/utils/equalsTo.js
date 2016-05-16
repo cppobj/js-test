@@ -7,9 +7,15 @@ function isSameTypeOf(value, other) {
 }
 
 function isObjectsEquals(value, other) {
-  // because null is object
+  // equality to null
   if (isNull(value) && isNull(other)) {
     return true;
+  }
+
+  if (isNull(value) && !isNull(other)
+    || !isNull(value) && isNull(other)
+  ) {
+    return false;
   }
 
   for (const prop in value) {
