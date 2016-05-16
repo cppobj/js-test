@@ -1,0 +1,13 @@
+{
+  "extends": "airbnb-base",
+  "globals": {
+    "assert": true,
+    "describe": true,
+    "it": true,
+    "specify": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true
+  }
+}

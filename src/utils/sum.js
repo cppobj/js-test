@@ -1,24 +1,24 @@
 function sum(a) {
-  let args = [];
-  
+  const args = [];
+
   args.push(a);
-  
-  let memo = function (b) {
+
+  const memo = function memo(b) {
     args.push(b);
-    
+
     return memo;
   };
-  
-  memo.valueOf = function () {
-    let sum = 0;
-    
-    args.forEach(function (value) {
-      sum += value;
+
+  memo.valueOf = function valueOf() {
+    let sumResult = 0;
+
+    args.forEach((value) => {
+      sumResult += value;
     });
-    
-    return sum;
+
+    return sumResult;
   };
-  
+
   return memo;
 }
 
