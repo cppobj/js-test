@@ -64,4 +64,73 @@ describe('equalsTo', () => {
     assert.isFalse(equalsTo(undefined, 'string'), 'undefined not equals to string');
     assert.isFalse(equalsTo(1, 'string'), 'number not equals to string');
   });
+
+  it('should compare objects', () => {
+    const obj = {};
+
+    assert.isTrue(equalsTo(obj, obj), 'obj should be equals to itself');
+    assert.isTrue(equalsTo({}, {}), 'empty objects equals to each other');
+    assert.isTrue(equalsTo({ a: 2 }, { a: 2 }), '');
+
+    assert.isFalse(equalsTo({ a: 2, b: 1 }, { a: 2 }), 'should not be equal case 1');
+    assert.isFalse(equalsTo({ a: 2 }, { a: 2, b: 1 }), 'should not be equal case 2');
+
+    assert.isTrue(
+      equalsTo({ a: { b: 2 }, c: { b: 2 } }, { a: { b: 2 }, c: { b: 2 } }),
+      'deep equal case 1');
+    assert.isTrue(
+      equalsTo({ a: { b: 2 }, c: { b: 2 } }, { c: { b: 2 }, a: { b: 2 } }),
+      'deep equal case 2');
+
+    assert.isTrue(
+      equalsTo(
+        {
+          a: { b: 2 },
+          c: { b: 2 },
+          b: {
+            a: {
+              c: {
+                a: 1,
+                b: 2,
+              },
+            },
+            b: {
+              a: {
+                b: {
+                  c: {
+                    d: null,
+                  },
+                },
+              },
+            },
+            c: 'string',
+            d: false,
+          },
+        },
+        {
+          a: { b: 2 },
+          c: { b: 2 },
+          b: {
+            a: {
+              c: {
+                a: 1,
+                b: 2,
+              },
+            },
+            b: {
+              a: {
+                b: {
+                  c: {
+                    d: null,
+                  },
+                },
+              },
+            },
+            c: 'string',
+            d: false,
+          },
+        }
+        ),
+      'deep equal case 3');
+  });
 });

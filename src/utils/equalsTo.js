@@ -18,6 +18,11 @@ function isObjectsEquals(value, other) {
     return false;
   }
 
+  // check for props count
+  if (Object.keys(value).length !== Object.keys(other).length) {
+    return false;
+  }
+
   for (const prop in value) {
     // check if property exists in other object
     if (!(prop in other)) {
@@ -44,6 +49,7 @@ function equalsTo(value, other) {
       return true;
     case 'number':
     case 'string':
+    case 'boolean':
     case 'function':
       return value === other;
     case 'object':
