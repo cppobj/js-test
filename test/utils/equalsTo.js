@@ -179,15 +179,33 @@ describe('equalsTo', () => {
 
   it('should compare regular expressions', () => {
     assert.isTrue(equalsTo(/abc/, /abc/), 'literal regular expressions should be equals');
-    assert.isTrue(equalsTo(/abc/i, /abc/i), 'literal regular expressions with flags should be equals');
+    assert.isTrue(
+      equalsTo(/abc/i, /abc/i),
+      'literal regular expressions with flags should be equals'
+    );
 
-    assert.isFalse(equalsTo(/abc/i, /abc/), 'literal regular expression with different set of flags should not be equals');
-    assert.isFalse(equalsTo(/abc/i, /abcd/), 'different literal regular expression should not be equals');
+    assert.isFalse(
+      equalsTo(/abc/i, /abc/),
+      'literal regular expression with different set of flags should not be equals'
+    );
+    assert.isFalse(
+      equalsTo(/abc/i, /abcd/),
+      'different literal regular expression should not be equals'
+    );
 
-    assert.isTrue(equalsTo(new RegExp('abc'), new RegExp('abc')), 'regular expressions should be equals');
-    assert.isTrue(equalsTo(new RegExp('abc', 'mi'), new RegExp('abc', 'im')), 'regular expressions with flags should be equals');
+    assert.isTrue(
+      equalsTo(new RegExp('abc'), new RegExp('abc')),
+      'regular expressions should be equals'
+    );
+    assert.isTrue(
+      equalsTo(new RegExp('abc', 'mi'), new RegExp('abc', 'im')),
+      'regular expressions with flags should be equals'
+    );
 
-    assert.isFalse(equalsTo(new RegExp('abc'), new RegExp('abc', 'i')), 'regular expression with different set of flags should not be equals');
+    assert.isFalse(
+      equalsTo(new RegExp('abc'), new RegExp('abc', 'i')),
+      'regular expression with different set of flags should not be equals'
+    );
 
     assert.isTrue(equalsTo(/abc/, new RegExp('abc')), 'literal and object should be equals');
   });
