@@ -1,4 +1,55 @@
+import chai from 'chai';
+
+const assert = chai.assert;
+
 import equalsTo from '../../src/utils/equalsTo';
+
+const hugeObj1 = {
+  a: { b: 2 },
+  c: { b: 2 },
+  b: {
+    a: {
+      c: {
+        a: 1,
+        b: 2,
+      },
+    },
+    b: {
+      a: {
+        b: {
+          c: {
+            d: null,
+          },
+        },
+      },
+    },
+    c: 'string',
+    d: false,
+  },
+};
+const hugeObj2 = {
+  a: { b: 2 },
+  c: { b: 2 },
+  b: {
+    a: {
+      c: {
+        a: 1,
+        b: 2,
+      },
+    },
+    b: {
+      a: {
+        b: {
+          c: {
+            d: null,
+          },
+        },
+      },
+    },
+    c: 'string',
+    d: false,
+  },
+};
 
 describe('equalsTo', () => {
   it('should compare nulls', () => {
@@ -74,7 +125,9 @@ describe('equalsTo', () => {
 
     assert.isFalse(equalsTo({ a: 2, b: 1 }, { a: 2 }), 'should not be equal case 1');
     assert.isFalse(equalsTo({ a: 2 }, { a: 2, b: 1 }), 'should not be equal case 2');
+  });
 
+  it('should compare objects with deep equality', () => {
     assert.isTrue(
       equalsTo({ a: { b: 2 }, c: { b: 2 } }, { a: { b: 2 }, c: { b: 2 } }),
       'deep equal case 1');
@@ -82,55 +135,60 @@ describe('equalsTo', () => {
       equalsTo({ a: { b: 2 }, c: { b: 2 } }, { c: { b: 2 }, a: { b: 2 } }),
       'deep equal case 2');
 
+    assert.isTrue(equalsTo(hugeObj1, hugeObj2), 'deep equal case 3');
+    assert.isTrue(equalsTo(hugeObj2, hugeObj1), 'deep equal case 3 (reverse)');
+  });
+
+  it('should compare arrays', () => {
+    assert.isTrue(equalsTo([], []), 'empty arrays are equals to each other');
+    assert.isTrue(equalsTo([1, 2, 4], [1, 2, 4]), 'arrays of numbers should be equals');
     assert.isTrue(
-      equalsTo(
-        {
-          a: { b: 2 },
-          c: { b: 2 },
-          b: {
-            a: {
-              c: {
-                a: 1,
-                b: 2,
-              },
-            },
-            b: {
-              a: {
-                b: {
-                  c: {
-                    d: null,
-                  },
-                },
-              },
-            },
-            c: 'string',
-            d: false,
-          },
-        },
-        {
-          a: { b: 2 },
-          c: { b: 2 },
-          b: {
-            a: {
-              c: {
-                a: 1,
-                b: 2,
-              },
-            },
-            b: {
-              a: {
-                b: {
-                  c: {
-                    d: null,
-                  },
-                },
-              },
-            },
-            c: 'string',
-            d: false,
-          },
-        }
-        ),
-      'deep equal case 3');
+      equalsTo([1, true, null, '', {}, undefined], [1, true, null, '', {}, undefined]),
+      'arrays of mixed types should be equals'
+    );
+    assert.isTrue(
+      equalsTo([{ a: 1, b: 2 }, { a: 1, b: 2 }], [{ a: 1, b: 2 }, { a: 1, b: 2 }]),
+      'arrays of objects should be equals'
+    );
+    assert.isTrue(
+      equalsTo([hugeObj1, hugeObj1, hugeObj2, null, 2], [hugeObj1, hugeObj1, hugeObj2, null, 2]),
+      'arrays of objects should be deep equals'
+    );
+
+    assert.isFalse(equalsTo([1], [2]), 'should not be equals case 1');
+    assert.isFalse(equalsTo([{ a: 2 }], [undefined, null]), 'should not be equals case 1');
+    assert.isFalse(equalsTo([null, undefined], [undefined, null]), 'should not be equals case 1');
+  });
+
+  it('should compare dates', () => {
+    assert.isTrue(
+      equalsTo(new Date(1991, 11, 11), new Date(1991, 11, 11)),
+      'same dates should be equals'
+    );
+
+    assert.isFalse(
+      equalsTo(new Date(1991, 11, 12), new Date(1991, 11, 11)),
+      'dates should not be equals'
+    );
+
+    assert.isFalse(
+      equalsTo(new Date(1991, 11, 11), new Date(1991, 11, 12)),
+      'dates should not be equals (reversed)'
+    );
+  });
+
+  it('should compare regular expressions', () => {
+    assert.isTrue(equalsTo(/abc/, /abc/), 'literal regular expressions should be equals');
+    assert.isTrue(equalsTo(/abc/i, /abc/i), 'literal regular expressions with flags should be equals');
+
+    assert.isFalse(equalsTo(/abc/i, /abc/), 'literal regular expression with different set of flags should not be equals');
+    assert.isFalse(equalsTo(/abc/i, /abcd/), 'different literal regular expression should not be equals');
+
+    assert.isTrue(equalsTo(new RegExp('abc'), new RegExp('abc')), 'regular expressions should be equals');
+    assert.isTrue(equalsTo(new RegExp('abc', 'mi'), new RegExp('abc', 'im')), 'regular expressions with flags should be equals');
+
+    assert.isFalse(equalsTo(new RegExp('abc'), new RegExp('abc', 'i')), 'regular expression with different set of flags should not be equals');
+
+    assert.isTrue(equalsTo(/abc/, new RegExp('abc')), 'literal and object should be equals');
   });
 });

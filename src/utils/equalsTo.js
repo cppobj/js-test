@@ -1,9 +1,21 @@
+const toString = Object.prototype.toString;
+
 function isNull(value) {
   return value === null;
 }
 
 function isSameTypeOf(value, other) {
   return typeof value === typeof other;
+}
+
+function isArrayEquals(value, other) {
+  if (value.length !== other.length) {
+    return false;
+  }
+
+  return value.every((currentValue, index) => {
+    return equalsTo(value[index], other[index]);
+  });
 }
 
 function isObjectsEquals(value, other) {
@@ -16,6 +28,21 @@ function isObjectsEquals(value, other) {
     || !isNull(value) && isNull(other)
   ) {
     return false;
+  }
+
+  // equality to array
+  if (Array.isArray(value) && Array.isArray(other)) {
+    return isArrayEquals(value, other);
+  }
+
+  // equality to Date
+  if (toString.call(value) === '[object Date]' && toString.call(other) === '[object Date]') {
+    return value.getTime() === other.getTime();
+  }
+
+  // equality to RegExp
+  if (toString.call(value) === '[object RegExp]' && toString.call(other) === '[object RegExp]') {
+    return value.toString() === other.toString();
   }
 
   // check for props count

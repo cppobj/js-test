@@ -1,3 +1,7 @@
+import chai from 'chai';
+
+const assert = chai.assert;
+
 import sum from '../../src/utils/sum';
 
 describe('sum', () => {
