@@ -1,16 +1,8 @@
-const toString = Object.prototype.toString;
-
-function isNull(value) {
-  return value === null;
-}
-
-function isSameTypeOf(value, other) {
-  return typeof value === typeof other;
-}
+import Is from './is';
 
 export class Equals {
   static to(value, other) {
-    if (!isSameTypeOf(value, other)) {
+    if (!Is.sameTypeOf(value, other)) {
       return false;
     }
 
@@ -25,7 +17,7 @@ export class Equals {
       case 'function':
         return value === other;
       case 'object':
-        return Equals.isObjectsEquals(value, other);
+        return Equals.toObject(value, other);
       default:
         break;
     }
@@ -33,7 +25,7 @@ export class Equals {
     return false;
   }
 
-  static isArrayEquals(value, other) {
+  static toArray(value, other) {
     if (value.length !== other.length) {
       return false;
     }
@@ -41,30 +33,28 @@ export class Equals {
     return value.every((currentValue, index) => Equals.to(value[index], other[index]));
   }
 
-  static isObjectsEquals(value, other) {
+  static toObject(value, other) {
     // equality to null
-    if (isNull(value) && isNull(other)) {
+    if (Is.null(value) && Is.null(other)) {
       return true;
     }
 
-    if (isNull(value) && !isNull(other)
-      || !isNull(value) && isNull(other)
-    ) {
+    if (Is.null(value) && !Is.null(other) || !Is.null(value) && Is.null(other)) {
       return false;
     }
 
     // equality to array
-    if (Array.isArray(value) && Array.isArray(other)) {
-      return Equals.isArrayEquals(value, other);
+    if (Is.array(value) && Is.array(other)) {
+      return Equals.toArray(value, other);
     }
 
     // equality to Date
-    if (toString.call(value) === '[object Date]' && toString.call(other) === '[object Date]') {
+    if (Is.date(value) && Is.date(other)) {
       return value.getTime() === other.getTime();
     }
 
     // equality to RegExp
-    if (toString.call(value) === '[object RegExp]' && toString.call(other) === '[object RegExp]') {
+    if (Is.regExp(value) && Is.regExp(other)) {
       return value.toString() === other.toString();
     }
 
