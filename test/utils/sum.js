@@ -1,6 +1,4 @@
-import chai from 'chai';
-
-const assert = chai.assert;
+import { assert } from 'chai';
 
 import sum from '../../src/utils/sum';
 
