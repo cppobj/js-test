@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import clone from '../../src/utils/clone';
+import clone from '../../src/task1/clone';
 
 describe('clone', () => {
   it('should clone functions', () => {

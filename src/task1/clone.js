@@ -1,4 +1,4 @@
-import Is from './is';
+import Is from './../utils/is';
 
 class CloneError extends Error {
 

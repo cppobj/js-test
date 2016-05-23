@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import R from '../../src/utils/r';
+import R from '../../src/task1/r';
 
 describe('R', () => {
   describe('#bind', () => {
