@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Task 1",
   "scripts": {
-    "mocha-test": "node node_modules/mocha/bin/mocha --compilers js:babel-register",
-    "eslint": "node node_modules/eslint/bin/eslint -c .eslintrc src test"
+    "test": "node node_modules/mocha/bin/mocha --compilers js:babel-register test/**/*.js",
+    "lint": "node node_modules/eslint/bin/eslint -c .eslintrc src test"
   },
   "author": "",
   "license": "ISC",
