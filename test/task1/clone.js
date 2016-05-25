@@ -35,6 +35,21 @@ describe('clone', () => {
     assert.equal(clonedObj.a.b, 42, 'property b should be equals to 42');
   });
 
+  it('should clone arrays', () => {
+    const arr = [1, { a: 2, b: { c: 3 } }, undefined, null, 'string', true];
+    const clonedArr = clone(arr);
+
+    assert.deepEqual(arr, clonedArr, 'cloned array should save as source');
+
+    delete arr[1].b.c;
+
+    assert.property(clonedArr[1].b, 'c', 'cloned element should have property c');
+
+    arr.length = 0;
+
+    assert.equal(clonedArr.length, 6, 'changes on source should not have affect to clone');
+  });
+
   it('should clone dates', () => {
     const now = new Date();
     const clonedNow = clone(now);

@@ -61,7 +61,7 @@ class Clone {
   }
 
   static array(source) {
-    const clone = new Array(source.length);
+    const clone = [];
 
     source.forEach((value) => {
       clone.push(Clone.clone(value));
