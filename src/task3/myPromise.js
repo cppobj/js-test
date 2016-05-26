@@ -1,8 +1,14 @@
+import Is from '../utils/is';
+
 const State = {
   PENDING: 0,
   FULFILLED: 1,
   REJECTED: 2,
 };
+
+// default callbacks for onFulfilled and onRejected for then() method
+const identity = (arg) => arg;
+const thrower = (arg) => arg;
 
 export default class MyPromise {
   get isFulfilled() {
@@ -35,7 +41,10 @@ export default class MyPromise {
     }, 0);
   }
 
-  then(onFulfilled, onRejected) {
+  then(onFulfilledCb, onRejectedCb) {
+    const onFulfilled = Is.function(onFulfilledCb) ? onFulfilledCb : identity;
+    const onRejected = Is.function(onRejectedCb) ? onRejectedCb : thrower;
+
     return new MyPromise((resolve, reject) => {
       if (this.state === State.PENDING) {
         this.onFulfilledCallbacks.push(() => {

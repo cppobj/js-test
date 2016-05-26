@@ -21,6 +21,10 @@ class Is {
     return Is.is(value, 'RegExp');
   }
 
+  static function(value) {
+    return typeof value === 'function';
+  }
+
   static is(value, type) {
     return toString.call(value) === `[object ${type}]`;
   }
