@@ -62,16 +62,24 @@ export default class MyPromise {
   }
 
   resolve(value) {
-    this.state = State.FULFILLED;
-    this.promiseResult = value;
-
-    this.onFulfilledCallbacks.forEach((cb) => { cb(this.promiseResult); });
+    this.fulfill(State.FULFILLED, value, this.onFulfilledCallbacks);
+    this.runPromiseJobs();
   }
 
   reject(reason) {
-    this.state = State.REJECTED;
-    this.promiseResult = reason;
+    this.fulfill(State.REJECTED, reason, this.onRejectedCallbacks);
+    this.runPromiseJobs();
+  }
 
-    this.onRejectedCallbacks.forEach((cb) => { cb(this.promiseResult); });
+  fulfill(state, promiseResult, promiseJobs) {
+    Object.assign(this, {
+      state,
+      promiseResult,
+      promiseJobs,
+    });
+  }
+
+  runPromiseJobs() {
+    this.promiseJobs.forEach((callback) => { callback(this.promiseResult); });
   }
 }
