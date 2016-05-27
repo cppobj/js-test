@@ -11,14 +11,10 @@ const identity = (arg) => arg;
 const thrower = (arg) => arg;
 
 export default class MyPromise {
-  get isFulfilled() {
-    return this.state === State.FULFILLED;
-  }
-
-  get isRejected() {
-    return this.state === State.REJECTED;
-  }
-
+  /**
+   * @private
+   * @returns {boolean}
+   */
   get isPending() {
     return this.state === State.PENDING;
   }

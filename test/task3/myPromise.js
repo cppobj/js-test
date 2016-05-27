@@ -26,7 +26,6 @@ describe('Promise', () => {
 
     promise.then((result) => {
       assert.equal(result, 42, 'result should be equal 42');
-      assert.isTrue(promise.isFulfilled, 'promise should have fulfilled state');
     });
 
     return promise;
@@ -41,7 +40,6 @@ describe('Promise', () => {
       try {
         assert.instanceOf(reason, Error, 'reason should be instance of Error');
         assert.equal(reason.message, 'Error happened', 'should have save error message');
-        assert.isTrue(promise.isRejected, 'promise should have rejected state');
 
         done();
       } catch (e) {
@@ -57,7 +55,6 @@ describe('Promise', () => {
 
     promise.then(null, (error) => {
       try {
-        assert.isTrue(promise.isRejected, 'promise should be rejected');
         assert.instanceOf(error, CustomError, 'error should be instance of CustomError');
         assert.equal(error.message, 'custom message', 'error should have message');
 
@@ -99,7 +96,6 @@ describe('Promise', () => {
 
     return promise.then((result) => {
       assert.equal(result, 11, 'result should be equal 42');
-      assert.isTrue(promise.isFulfilled, 'promise should have fulfilled state');
     });
   });
 
@@ -112,7 +108,6 @@ describe('Promise', () => {
 
     promise.then(null, (errorMessage) => {
       try {
-        assert.isTrue(promise.isRejected, 'promise should be rejected');
         assert.equal(errorMessage, 'rejected', 'error should have message');
 
         done();
