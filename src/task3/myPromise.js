@@ -41,6 +41,12 @@ export default class MyPromise {
     }, 0);
   }
 
+  /**
+   * @public
+   * @param {function} onFulfilledCb
+   * @param {function} onRejectedCb
+   * @returns {MyPromise}
+   */
   then(onFulfilledCb, onRejectedCb) {
     const onFulfilled = Is.function(onFulfilledCb) ? onFulfilledCb : identity;
     const onRejected = Is.function(onRejectedCb) ? onRejectedCb : thrower;
@@ -61,16 +67,38 @@ export default class MyPromise {
     });
   }
 
+  /**
+   * @private
+   * @param {Object} value
+   */
   resolve(value) {
+    if (!this.isPending) {
+      return;
+    }
+
     this.fulfill(State.FULFILLED, value, this.onFulfilledCallbacks);
     this.runPromiseJobs();
   }
 
+  /**
+   * @private
+   * @param {Object} reason
+   */
   reject(reason) {
+    if (!this.isPending) {
+      return;
+    }
+
     this.fulfill(State.REJECTED, reason, this.onRejectedCallbacks);
     this.runPromiseJobs();
   }
 
+  /**
+   * @private
+   * @param {int} state
+   * @param {Object} promiseResult
+   * @param {Array<function>} promiseJobs
+   */
   fulfill(state, promiseResult, promiseJobs) {
     Object.assign(this, {
       state,
@@ -79,6 +107,9 @@ export default class MyPromise {
     });
   }
 
+  /**
+   * @private
+   */
   runPromiseJobs() {
     this.promiseJobs.forEach((callback) => { callback(this.promiseResult); });
   }

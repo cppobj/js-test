@@ -88,4 +88,37 @@ describe('Promise', () => {
         assert.equal(result, 3, 'result should be incremented to 1 ( == 3 )');
       });
   });
+
+  it('promise should be resolved once when user invokes multiple time resolve() method', () => {
+    const promise = new MyPromise((resolve) => {
+      resolve(11);
+      resolve(72);
+      resolve(71);
+      resolve(70);
+    });
+
+    return promise.then((result) => {
+      assert.equal(result, 11, 'result should be equal 42');
+      assert.isTrue(promise.isFulfilled, 'promise should have fulfilled state');
+    });
+  });
+
+  it('promise should be rejected once when user invokes multiple time reject() method', (done) => {
+    const promise = new MyPromise((resolve, reject) => {
+      reject('rejected');
+      reject('error');
+      reject('exception');
+    });
+
+    promise.then(null, (errorMessage) => {
+      try {
+        assert.isTrue(promise.isRejected, 'promise should be rejected');
+        assert.equal(errorMessage, 'rejected', 'error should have message');
+
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+  });
 });
