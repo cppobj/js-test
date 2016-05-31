@@ -25,6 +25,18 @@ class Is {
     return typeof value === 'function';
   }
 
+  static generator(fn) {
+    return Object.getPrototypeOf(fn).constructor.name === 'GeneratorFunction';
+  }
+
+  static promise(value) {
+    return value && Is.function(value.then);
+  }
+
+  static undefined(value) {
+    return typeof value === 'undefined';
+  }
+
   static is(value, type) {
     return toString.call(value) === `[object ${type}]`;
   }
