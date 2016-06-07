@@ -7,15 +7,14 @@ class CoError extends Error {
 const executor = function executorFn(generator, yieldValue) {
   const next = generator.next(yieldValue);
   const value = next.value;
+  const isDone = next.done;
 
-  if (!(Is.promise(value) || Is.undefined(value))) {
+  if (!(isDone || Is.promise(value) || Is.undefined(value))) {
     throw new CoError('Generator returned type different from Promise or undefined');
   }
 
-  if (next.done) {
-    return new Promise(resolve => {
-      resolve(value);
-    });
+  if (isDone) {
+    return new Promise(resolve => resolve(value));
   }
 
   if (Is.promise(value)) {
@@ -37,7 +36,7 @@ const executor = function executorFn(generator, yieldValue) {
 };
 
 const co = function coFn(generatorFn) {
-  if (Is.generator(generatorFn)) {
+  if (!Is.generator(generatorFn)) {
     return new Promise(() => {
       throw new CoError('Generator function is not generator');
     });
