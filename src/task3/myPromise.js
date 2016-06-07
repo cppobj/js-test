@@ -43,21 +43,27 @@ export default class MyPromise {
    * @param {function} onRejectedCb
    * @returns {MyPromise}
    */
-  then(onFulfilledCb, onRejectedCb) {
+  then(onFulfilledCb = null, onRejectedCb = null) {
     const onFulfilled = Is.function(onFulfilledCb) ? onFulfilledCb : identity;
     const onRejected = Is.function(onRejectedCb) ? onRejectedCb : thrower;
 
     return new MyPromise((resolve, reject) => {
+      const doFulfill = () => {
+        const result = onFulfilled(this.promiseResult);
+
+        if (result instanceof MyPromise) {
+          result.then((res) => resolve(res));
+        } else {
+          resolve(result);
+        }
+      };
+
       if (this.state === State.PENDING) {
-        this.onFulfilledCallbacks.push(() => {
-          resolve(onFulfilled(this.promiseResult));
-        });
-        this.onRejectedCallbacks.push(() => {
-          reject(onRejected(this.promiseResult));
-        });
+        this.onFulfilledCallbacks.push(() => { doFulfill(); });
+        this.onRejectedCallbacks.push(() => { reject(onRejected(this.promiseResult)); });
       } else if (this.state === State.FULFILLED) {
-        resolve(onFulfilled(this.promiseResult));
-      } else { // rejected
+        doFulfill();
+      } else {
         reject(onRejected(this.promiseResult));
       }
     });

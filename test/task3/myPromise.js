@@ -86,6 +86,38 @@ describe('Promise', () => {
       });
   });
 
+  it('should have ability to chain promise that return promise', (done) => {
+    const promise = new MyPromise((resolve) => {
+      resolve(1);
+    });
+
+    promise
+      .then((result) => {
+        assert.equal(result, 1, 'should be equal to 1');
+
+        return new MyPromise((resolve) => { resolve(4 + result); });
+      })
+      .then((result) => {
+        assert.equal(result, 5, 'result should be equal to 5');
+
+        return result + 1;
+      })
+      .then((result) => {
+        assert.equal(result, 6, 'result should be incremented to 1 ( == 6 )');
+
+        return new MyPromise((resolve) => { resolve(result * 2); });
+      })
+      .then((result) => {
+        try {
+          assert.equal(result, 12, 'result should be multiplied to 2 ( == 12 )');
+
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+  });
+
   it('promise should be resolved once when user invokes multiple time resolve() method', () => {
     const promise = new MyPromise((resolve) => {
       resolve(11);
